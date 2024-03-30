@@ -1,5 +1,7 @@
 package com.example.ticketfinderapp
 
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,9 +9,11 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 
-class MyRecyclerAdapter() : RecyclerView.Adapter<MyRecyclerAdapter.MyViewHolder>() {
+class MyRecyclerAdapter(private val events: ArrayList<Event>) : RecyclerView.Adapter<MyRecyclerAdapter.MyViewHolder>() {
     // Provide a reference to the views for each data item
 // Complex data items may need more than one view per item, and
 // you provide access to all the views for a data item in a view holder.
@@ -20,6 +24,7 @@ class MyRecyclerAdapter() : RecyclerView.Adapter<MyRecyclerAdapter.MyViewHolder>
         val address = itemView.findViewById<TextView>(R.id.textView_address)
         val date = itemView.findViewById<TextView>(R.id.textView_date)
         val range = itemView.findViewById<TextView>(R.id.textView_range)
+        val button = itemView.findViewById<Button>(R.id.button_tickets)
     }
 
     // Create new views (invoked by the layout manager)
@@ -30,16 +35,31 @@ class MyRecyclerAdapter() : RecyclerView.Adapter<MyRecyclerAdapter.MyViewHolder>
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.image.setImageResource(R.drawable.baseline_music_video_24)
-        holder.title.text = "Hartford Symphony Orchestra"
-        holder.location.text = "Bushnell Theatre"
-        holder.address.text = "Address: 166 Capitol Ave, Hartford, Connecticut"
-        holder.date.text = "Date: 03/23/2024 @ 7:30 PM"
-        holder.range.text = "Price Range: \$46.5 - \$86.5"
+        val highestQualityImage = events[position].images.maxByOrNull {
+            it.width.toInt() * it.height.toInt()
+        }
+
+        val context = holder.itemView.context
+
+        Glide.with(context)
+            .load(highestQualityImage?.url)
+            .into(holder.image)
+
+        holder.title.text = events[position].name
+        holder.location.text = "${events[position]._embedded.venues[0].name}, ${events[position]._embedded.venues[0].city.name}"
+        holder.address.text = "${events[position]._embedded.venues[0].address.line1}, ${events[position]._embedded.venues[0].city.name}, ${events[position]._embedded.venues[0].state.stateCode}"
+        holder.date.text = "${events[position].dates.start.localDate} @ ${events[position].dates.start.localTime}"
+        holder.range.text = "Price Range: Jonathon - Dio"
+
+        holder.button.setOnClickListener {
+            val browserIntent = Intent(Intent.ACTION_VIEW)
+            browserIntent.data = Uri.parse(events[position].url)
+            holder.itemView.context.startActivity(browserIntent)
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount(): Int {
-        return 20
+        return events.size
     }
 }

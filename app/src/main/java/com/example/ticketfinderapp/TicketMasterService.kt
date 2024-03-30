@@ -9,5 +9,5 @@ interface TicketMasterService {
     // https://app.ticketmaster.com/discovery/v2/events.json?keyword=music&city=hartford&apikey=Ayl9reEX22B94IUU01mLxM89kAE1H6ia
 
     @GET(".")
-    fun getData(@Query("keyword") keyword: String,@Query("city") city: String): Call<Any>
+    fun getData(@Query("apikey") apiKey: String, @Query("keyword") keyword: String, @Query("city") city: String, @Query("sort") sort: String): Call<TicketMasterData>
 }
