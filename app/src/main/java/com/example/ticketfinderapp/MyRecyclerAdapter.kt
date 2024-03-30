@@ -49,7 +49,13 @@ class MyRecyclerAdapter(private val events: ArrayList<Event>) : RecyclerView.Ada
         holder.location.text = "${events[position]._embedded.venues[0].name}, ${events[position]._embedded.venues[0].city.name}"
         holder.address.text = "${events[position]._embedded.venues[0].address.line1}, ${events[position]._embedded.venues[0].city.name}, ${events[position]._embedded.venues[0].state.stateCode}"
         holder.date.text = "${events[position].dates.start.localDate} @ ${events[position].dates.start.localTime}"
-        holder.range.text = "Price Range: Jonathon - Dio"
+
+        if (events.getOrNull(position)?.priceRanges?.isNotEmpty() == true) {
+            holder.range.text = "Price Range: $${events[position].priceRanges[0].min} - $${events[position].priceRanges[0].max}"
+            holder.range.visibility = View.VISIBLE
+        } else {
+            holder.range.visibility = View.INVISIBLE
+        }
 
         holder.button.setOnClickListener {
             val browserIntent = Intent(Intent.ACTION_VIEW)

@@ -13,7 +13,7 @@ data class Event(
     val url: String,
     val images: List<Images>,
     val dates: Dates,
-    //val priceRanges: List<PriceRange>,
+    val priceRanges: List<PriceRange>,
     val _embedded: Embedded2
 )
 
@@ -33,8 +33,8 @@ data class Start(
 )
 
 data class PriceRange(
-    val min: Int,
-    val max: Int
+    val min: Double,
+    val max: Double
 )
 
 data class Embedded2(
