@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -68,9 +69,20 @@ class MainActivity : AppCompatActivity() {
                     return
                 }
 
+                val noResults = findViewById<TextView>(R.id.textView_no_results)
+
+                if (body._embedded == null || body._embedded.events.isEmpty()) {
+                    noResults.visibility = View.VISIBLE
+                    return
+                }
+
+                noResults.visibility = View.INVISIBLE
+
                 events.clear()
                 events.addAll(body._embedded.events)
                 adapter.notifyDataSetChanged()
+
+
             }
 
             override fun onFailure(call: Call<TicketMasterData>, t: Throwable) {

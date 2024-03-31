@@ -48,7 +48,19 @@ class MyRecyclerAdapter(private val events: ArrayList<Event>) : RecyclerView.Ada
         holder.title.text = events[position].name
         holder.location.text = "${events[position]._embedded.venues[0].name}, ${events[position]._embedded.venues[0].city.name}"
         holder.address.text = "${events[position]._embedded.venues[0].address.line1}, ${events[position]._embedded.venues[0].city.name}, ${events[position]._embedded.venues[0].state.stateCode}"
-        holder.date.text = "${events[position].dates.start.localDate} @ ${events[position].dates.start.localTime}"
+
+        var dateText = events[position].dates.start.localDate
+        var timeText = events[position].dates.start.localTime
+
+        val dateParts = dateText.split("-")
+        dateText = "${dateParts[1]}/${dateParts[2]}/${dateParts[0]}"
+
+        val timeParts = timeText.split(":")
+        val hour = timeParts[0].toInt()
+        val amPm = if (hour < 12) "AM" else "PM"
+        timeText = "${if (hour > 12) hour - 12 else hour}:${timeParts[1]} $amPm"
+
+        holder.date.text = "$dateText @ $timeText"
 
         if (events.getOrNull(position)?.priceRanges?.isNotEmpty() == true) {
             holder.range.text = "Price Range: $${events[position].priceRanges[0].min} - $${events[position].priceRanges[0].max}"
