@@ -25,13 +25,14 @@ class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
 
     private var events = ArrayList<Event>()
+    private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MyRecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val recyclerView = findViewById<RecyclerView>(R.id.RecyclerView)
+        recyclerView = findViewById<RecyclerView>(R.id.RecyclerView)
         adapter = MyRecyclerAdapter(events)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -70,19 +71,19 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 val noResults = findViewById<TextView>(R.id.textView_no_results)
-
+                // Check and return if no events
                 if (body._embedded == null || body._embedded.events.isEmpty()) {
                     noResults.visibility = View.VISIBLE
+                    recyclerView.visibility = View.INVISIBLE
                     return
                 }
 
                 noResults.visibility = View.INVISIBLE
+                recyclerView.visibility = View.VISIBLE
 
                 events.clear()
                 events.addAll(body._embedded.events)
                 adapter.notifyDataSetChanged()
-
-
             }
 
             override fun onFailure(call: Call<TicketMasterData>, t: Throwable) {

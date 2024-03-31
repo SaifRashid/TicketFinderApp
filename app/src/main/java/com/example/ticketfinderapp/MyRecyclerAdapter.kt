@@ -41,28 +41,42 @@ class MyRecyclerAdapter(private val events: ArrayList<Event>) : RecyclerView.Ada
 
         val context = holder.itemView.context
 
-        Glide.with(context)
-            .load(highestQualityImage?.url)
-            .into(holder.image)
+        if (highestQualityImage != null) {
+            Glide.with(context)
+                .load(highestQualityImage.url)
+                .into(holder.image)
+        } else {
+            holder.image.setImageResource(R.drawable.no_image)
+        }
 
-        holder.title.text = events[position].name
-        holder.location.text = "${events[position]._embedded.venues[0].name}, ${events[position]._embedded.venues[0].city.name}"
-        holder.address.text = "${events[position]._embedded.venues[0].address.line1}, ${events[position]._embedded.venues[0].city.name}, ${events[position]._embedded.venues[0].state.stateCode}"
+        holder.title.text = events[position].name ?: "N/A"
 
-        var dateText = events[position].dates.start.localDate
-        var timeText = events[position].dates.start.localTime
+        val venue = events[position]._embedded.venues.getOrNull(0)
+        val venueName = venue?.name ?: "N/A"
+        val cityName = venue?.city?.name ?: "N/A"
+        holder.location.text = "$venueName, $cityName"
+        val addressLine1 = venue?.address?.line1 ?: "N/A"
+        val stateCode = venue?.state?.stateCode ?: "N/A"
+        holder.address.text = "$addressLine1, $cityName, $stateCode"
 
-        val dateParts = dateText.split("-")
-        dateText = "${dateParts[1]}/${dateParts[2]}/${dateParts[0]}"
+        var dateText = events[position].dates.start.localDate ?: "N/A"
+        var timeText = events[position].dates.start.localTime ?: "N/A"
 
-        val timeParts = timeText.split(":")
-        val hour = timeParts[0].toInt()
-        val amPm = if (hour < 12) "AM" else "PM"
-        timeText = "${if (hour > 12) hour - 12 else hour}:${timeParts[1]} $amPm"
+        dateText = dateText.takeIf { it.isNotEmpty() }?.let {
+            val dateParts = it.split("-")
+            "${dateParts.getOrNull(1)}/${dateParts.getOrNull(2)}/${dateParts.getOrNull(0) ?: "N/A"}"
+        } ?: "N/A"
+
+        timeText = timeText.takeIf { it.isNotEmpty() }?.let {
+            val timeParts = it.split(":")
+            val hour = timeParts.getOrNull(0)?.toIntOrNull() ?: 0
+            val amPm = if (hour < 12) "AM" else "PM"
+            "${if (hour > 12) hour - 12 else hour}:${timeParts.getOrNull(1) ?: "N/A"} $amPm"
+        } ?: "N/A"
 
         holder.date.text = "$dateText @ $timeText"
 
-        if (events.getOrNull(position)?.priceRanges?.isNotEmpty() == true) {
+        if (events[position].priceRanges?.isNotEmpty() == true) {
             holder.range.text = "Price Range: $${events[position].priceRanges[0].min} - $${events[position].priceRanges[0].max}"
             holder.range.visibility = View.VISIBLE
         } else {
@@ -70,9 +84,11 @@ class MyRecyclerAdapter(private val events: ArrayList<Event>) : RecyclerView.Ada
         }
 
         holder.button.setOnClickListener {
-            val browserIntent = Intent(Intent.ACTION_VIEW)
-            browserIntent.data = Uri.parse(events[position].url)
-            holder.itemView.context.startActivity(browserIntent)
+            events[position].url?.let { url ->
+                val browserIntent = Intent(Intent.ACTION_VIEW)
+                browserIntent.data = Uri.parse(url)
+                holder.itemView.context.startActivity(browserIntent)
+            }
         }
     }
 
