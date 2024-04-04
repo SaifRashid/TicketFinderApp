@@ -43,9 +43,9 @@ class MainActivity : AppCompatActivity() {
         val editTextCity = findViewById<EditText>(R.id.editText_city)
 
         if (editTextKeyword.text.toString().isEmpty())
-            alertDialog("keyword")
+            alertDialog("Search term missing", "Search term cannot be empty. Please enter a search term.")
         else if (editTextCity.text.toString().isEmpty())
-            alertDialog("city")
+            alertDialog("Location missing", "City cannot be empty. Please enter a city.")
         else {
             view.hideKeyboard()
 
@@ -92,17 +92,7 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun alertDialog(missing: String) {
-        val title: String
-        val message: String
-
-        if (missing == "keyword") {
-            title = "Search term missing"
-            message = "Search term cannot be empty. Please enter a search term."
-        } else {
-            title = "Location missing"
-            message = "City cannot be empty. Please enter a city."
-        }
+    private fun alertDialog(title: String, message: String) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(title)
         builder.setMessage(message)
