@@ -19,7 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
 
-    private val BASE_URL = "https://app.ticketmaster.com/discovery/v2/events/"
+    private val BASE_URL = "https://app.ticketmaster.com/discovery/v2/"
     private val apikey = "Ayl9reEX22B94IUU01mLxM89kAE1H6ia"
     private val sort = "date,asc"
     private val TAG = "MainActivity"
