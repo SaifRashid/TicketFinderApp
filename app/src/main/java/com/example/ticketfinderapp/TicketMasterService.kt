@@ -10,4 +10,8 @@ interface TicketMasterService {
 
     @GET("events")
     fun getData(@Query("apikey") apiKey: String, @Query("keyword") keyword: String, @Query("city") city: String, @Query("sort") sort: String): Call<TicketMasterData>
+
+    @GET("events")
+    fun getData(@Query("apikey") apiKey: String, @Query("keyword") keyword: String, @Query("city") city: String, @Query("sort") sort: String, @Query("venueId") venueId: String): Call<TicketMasterData>
 }
+

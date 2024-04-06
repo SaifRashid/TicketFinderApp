@@ -1,5 +1,7 @@
 package com.example.ticketfinderapp
 
+import android.icu.text.UnicodeSetSpanner.CountMethod
+
 data class TicketMasterData(
     val _embedded: Embedded
 )
@@ -45,7 +47,9 @@ data class Venue(
     val name: String,
     val city: City,
     val state: State,
-    val address: Address
+    val country: Country,
+    val address: Address,
+    val id: String
 )
 
 data class City(
@@ -54,6 +58,10 @@ data class City(
 
 data class State(
     val stateCode: String
+)
+
+data class Country(
+    val countryCode: String
 )
 
 data class Address(

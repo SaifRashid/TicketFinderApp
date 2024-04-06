@@ -52,27 +52,29 @@ class MyRecyclerAdapter(private val events: ArrayList<Event>) : RecyclerView.Ada
         holder.title.text = events[position].name ?: "N/A"
 
         val venue = events[position]._embedded.venues.getOrNull(0)
-        val venueName = venue?.name ?: "N/A"
-        val cityName = venue?.city?.name ?: "N/A"
+        val venueName = venue?.name ?: " NAME N/A"
+        val cityName = venue?.city?.name ?: "CITY N/A"
         holder.location.text = "$venueName, $cityName"
-        val addressLine1 = venue?.address?.line1 ?: "N/A"
-        val stateCode = venue?.state?.stateCode ?: "N/A"
+        val addressLine1 = venue?.address?.line1 ?: "ADDRESS N/A"
+        val stateCode = venue?.state?.stateCode ?: venue?.country?.countryCode ?: "STATE N/A"
         holder.address.text = "$addressLine1, $cityName, $stateCode"
 
-        var dateText = events[position].dates.start.localDate ?: "N/A"
-        var timeText = events[position].dates.start.localTime ?: "N/A"
+        var dateText = events[position].dates.start.localDate ?: ""
+        var timeText = events[position].dates.start.localTime ?: ""
 
-        dateText = dateText.takeIf { it.isNotEmpty() }?.let {
-            val dateParts = it.split("-")
+        dateText = if (dateText.isNotEmpty()) {
+            val dateParts = dateText.split("-")
             "${dateParts.getOrNull(1)}/${dateParts.getOrNull(2)}/${dateParts.getOrNull(0) ?: "N/A"}"
-        } ?: "N/A"
+        } else
+            "DATE N/A"
 
-        timeText = timeText.takeIf { it.isNotEmpty() }?.let {
-            val timeParts = it.split(":")
+        timeText = if (timeText.isNotEmpty()) {
+            val timeParts = timeText.split(":")
             val hour = timeParts.getOrNull(0)?.toIntOrNull() ?: 0
             val amPm = if (hour < 12) "AM" else "PM"
             "${if (hour > 12) hour - 12 else hour}:${timeParts.getOrNull(1) ?: "N/A"} $amPm"
-        } ?: "N/A"
+        } else
+            "TIME N/A"
 
         holder.date.text = "$dateText @ $timeText"
 
