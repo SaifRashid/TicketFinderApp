@@ -52,7 +52,7 @@ class MyRecyclerAdapter(private val events: ArrayList<Event>) : RecyclerView.Ada
         holder.title.text = events[position].name ?: "N/A"
 
         val venue = events[position]._embedded.venues.getOrNull(0)
-        val venueName = venue?.name ?: " NAME N/A"
+        val venueName = venue?.name ?: " VENUE N/A"
         val cityName = venue?.city?.name ?: "CITY N/A"
         holder.location.text = "$venueName, $cityName"
         val addressLine1 = venue?.address?.line1 ?: "ADDRESS N/A"

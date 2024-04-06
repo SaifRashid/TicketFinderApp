@@ -1,7 +1,5 @@
 package com.example.ticketfinderapp
 
-import android.icu.text.UnicodeSetSpanner.CountMethod
-
 data class TicketMasterData(
     val _embedded: Embedded
 )
