@@ -1,3 +1,7 @@
 # Ticket Finder App  
-## Make filter by venue  
-### Populate selection menu with venue name from dictionary created from events containing the venue name and id. After user selects a venue query events with the id. 
+This Android app allows users to search for events using the Ticketmaster API. Users can search by keyword, city, and venue, and view details of the events including images, location, date, and ticket prices.  
+
+## Features  
+- Search for events by keyword, city, and venue  
+- View event details including images, location, date, and ticket prices  
+- Click a button to open the event's ticket page in your web browser  
