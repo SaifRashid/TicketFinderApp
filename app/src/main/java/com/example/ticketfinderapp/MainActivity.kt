@@ -133,13 +133,10 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
                     }
-
-
-
                 val venueNames = ArrayList<String>(venueMap.keys)
-                    venueNames.add(0, "No Venue Filter")
-                    val adapter = ArrayAdapter(this@MainActivity, android.R.layout.simple_spinner_dropdown_item, venueNames)
-                    spinner.adapter = adapter
+                venueNames.add(0, "No Venue Filter")
+                val adapter = ArrayAdapter(this@MainActivity, android.R.layout.simple_spinner_dropdown_item, venueNames)
+                spinner.adapter = adapter
                 }
             }
 
