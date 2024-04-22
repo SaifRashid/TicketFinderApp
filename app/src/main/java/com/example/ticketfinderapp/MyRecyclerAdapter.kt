@@ -17,7 +17,7 @@ class MyRecyclerAdapter(private val events: ArrayList<Event>) : RecyclerView.Ada
     // Provide a reference to the views for each data item
 // Complex data items may need more than one view per item, and
 // you provide access to all the views for a data item in a view holder.
-    class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class MyViewHolder(itemView: View, private val events: ArrayList<Event>) : RecyclerView.ViewHolder(itemView) {
         val image = itemView.findViewById<ImageView>(R.id.imageView)
         val title = itemView.findViewById<TextView>(R.id.textView_title)
         val location = itemView.findViewById<TextView>(R.id.textView_location)
@@ -25,12 +25,25 @@ class MyRecyclerAdapter(private val events: ArrayList<Event>) : RecyclerView.Ada
         val date = itemView.findViewById<TextView>(R.id.textView_date)
         val range = itemView.findViewById<TextView>(R.id.textView_range)
         val button = itemView.findViewById<Button>(R.id.button_tickets)
+
+        init {
+            button.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    events[position].url?.let { url ->
+                        val browserIntent = Intent(Intent.ACTION_VIEW)
+                        browserIntent.data = Uri.parse(url)
+                        itemView.context.startActivity(browserIntent)
+                    }
+                }
+            }
+        }
     }
 
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.row_item, parent, false)
-        return MyViewHolder(view)
+        return MyViewHolder(view, events)
     }
 
     // Replace the contents of a view (invoked by the layout manager)
@@ -83,14 +96,6 @@ class MyRecyclerAdapter(private val events: ArrayList<Event>) : RecyclerView.Ada
             holder.range.visibility = View.VISIBLE
         } else {
             holder.range.visibility = View.INVISIBLE
-        }
-
-        holder.button.setOnClickListener {
-            events[position].url?.let { url ->
-                val browserIntent = Intent(Intent.ACTION_VIEW)
-                browserIntent.data = Uri.parse(url)
-                holder.itemView.context.startActivity(browserIntent)
-            }
         }
     }
 
