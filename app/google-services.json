@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "963633164636",
+    "project_id": "final-project-60697",
+    "storage_bucket": "final-project-60697.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:963633164636:android:9cff7ce2d62fc46b3c9199",
+        "android_client_info": {
+          "package_name": "com.example.ticketfinderapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "963633164636-io8hhndjgg4pl4hb654al3acg8rrf06a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ticketfinderapp",
+            "certificate_hash": "32d4879278fd1851917d691af9f0abb158c3f862"
+          }
+        },
+        {
+          "client_id": "963633164636-o7s0571h7a49annie82u0c5vr3a002n3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmw_p-nZjLcqFIH8ghQRxKILx280Zqyvo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "963633164636-o7s0571h7a49annie82u0c5vr3a002n3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

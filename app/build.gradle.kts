@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    // Firebase
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -51,4 +53,19 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+
+    // Import the Firebase BoM
+    implementation("com.google.firebase:firebase-bom:32.8.0")
+    // Import Firestore
+    implementation("com.google.firebase:firebase-firestore:24.11.0")
+    // Authentication
+    implementation("com.google.firebase:firebase-auth")
+    // FirebaseUI for Firebase Auth
+    implementation("com.firebaseui:firebase-ui-auth:8.0.2")
 }
