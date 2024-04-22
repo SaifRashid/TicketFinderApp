@@ -22,6 +22,7 @@ class HomeFragment : Fragment() {
         // Write your code
 
 
+
         return view
     }
 }
