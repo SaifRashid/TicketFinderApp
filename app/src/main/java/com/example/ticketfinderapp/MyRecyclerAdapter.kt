@@ -2,16 +2,19 @@ package com.example.ticketfinderapp
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.firebase.firestore.FirebaseFirestore
 
 class MyRecyclerAdapter(private val events: ArrayList<Event>) : RecyclerView.Adapter<MyRecyclerAdapter.MyViewHolder>() {
     // Provide a reference to the views for each data item
@@ -25,6 +28,9 @@ class MyRecyclerAdapter(private val events: ArrayList<Event>) : RecyclerView.Ada
         val date = itemView.findViewById<TextView>(R.id.textView_date)
         val range = itemView.findViewById<TextView>(R.id.textView_range)
         val button = itemView.findViewById<Button>(R.id.button_tickets)
+        val favoriteImage = itemView.findViewById<ImageView>(R.id.image_favorite)
+
+        var db = FirebaseFirestore.getInstance()
 
         init {
             button.setOnClickListener {
@@ -35,6 +41,31 @@ class MyRecyclerAdapter(private val events: ArrayList<Event>) : RecyclerView.Ada
                         browserIntent.data = Uri.parse(url)
                         itemView.context.startActivity(browserIntent)
                     }
+                }
+            }
+            favoriteImage.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val eventId = events[position].id
+
+                    // Add the event ID to Firestore
+                    val favoritesCollection = db.collection("favorites")
+                    favoritesCollection.document(eventId).set(mapOf("eventId" to eventId))
+                        .addOnSuccessListener {
+                            favoriteImage.setImageResource(R.drawable.star)
+                            Toast.makeText(
+                                itemView.context,
+                                "Event added to favorites",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(
+                                itemView.context,
+                                "Failed to add event to favorites",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                 }
             }
         }

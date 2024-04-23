@@ -10,6 +10,7 @@ data class Embedded(
 
 data class Event(
     val name: String,
+    val id: String,
     val url: String,
     val images: List<Images>,
     val dates: Dates,

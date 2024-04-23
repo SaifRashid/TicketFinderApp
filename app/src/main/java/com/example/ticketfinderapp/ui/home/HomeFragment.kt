@@ -68,6 +68,8 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         // Write your code
+        // Get a Cloud Firestore instance
+        var db = FirebaseFirestore.getInstance()
         loginButton = view.findViewById(R.id.login_button)
 
         recyclerView = view.findViewById(R.id.RecyclerView)
@@ -100,9 +102,6 @@ class HomeFragment : Fragment() {
 
         // Get instance of the FirebaseAuth
         val currentUser = FirebaseAuth.getInstance().currentUser
-        // Get a Cloud Firestore instance
-        var db = FirebaseFirestore.getInstance()
-
 
         // If currentUser is not null, we have a user and go back to the MainActivity
         if (currentUser != null) {
