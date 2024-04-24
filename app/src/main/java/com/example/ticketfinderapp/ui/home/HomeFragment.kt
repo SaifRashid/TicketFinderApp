@@ -33,6 +33,7 @@ import com.example.ticketfinderapp.TicketMasterService
 import com.example.ticketfinderapp.databinding.FragmentHomeBinding
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import retrofit2.Call
@@ -45,7 +46,7 @@ class HomeFragment : Fragment() {
     private val BASE_URL = "https://app.ticketmaster.com/discovery/v2/"
     private val apikey = "Ayl9reEX22B94IUU01mLxM89kAE1H6ia"
     private val sort = "date,asc"
-    private val TAG = "MainActivity"
+    private val TAG = "Home Fragment"
 
     private lateinit var loginButton: Button
 
