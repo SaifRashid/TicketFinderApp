@@ -49,6 +49,7 @@ class HomeFragment : Fragment() {
     private val TAG = "Home Fragment"
 
     private lateinit var loginButton: Button
+    private lateinit var favoriteEvents: ArrayList<String>
 
     private val events = ArrayList<Event>()
     private lateinit var recyclerView: RecyclerView
@@ -70,11 +71,13 @@ class HomeFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         // Write your code
         // Get a Cloud Firestore instance
-        var db = FirebaseFirestore.getInstance()
+        val db = FirebaseFirestore.getInstance()
         loginButton = view.findViewById(R.id.login_button)
+        val user = FirebaseAuth.getInstance().currentUser
+        favoriteEvents = ArrayList()
 
         recyclerView = view.findViewById(R.id.RecyclerView)
-        adapter = MyRecyclerAdapter(events)
+        adapter = MyRecyclerAdapter(events, db, favoriteEvents)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(view.context)
 
@@ -121,8 +124,17 @@ class HomeFragment : Fragment() {
                         //Checking for User (New/Old) (optional--you do not have to show these toast messages)
                         if (user?.metadata?.creationTimestamp == user?.metadata?.lastSignInTimestamp) {
                             //This is a New User
-                            Toast.makeText(view.context, "Welcome New User!", Toast.LENGTH_SHORT)
-                                .show()
+                            val docData = hashMapOf(
+                                "favoriteEvents" to arrayListOf<String>()
+                            )
+                            db.collection("favorites").document(user!!.uid).set(docData)
+                                .addOnSuccessListener {
+                                    Log.d(TAG, "DocumentSnapshot successfully written!")
+                                    Toast.makeText(view.context, "Welcome New User!", Toast.LENGTH_SHORT).show()
+                                }
+                                .addOnFailureListener { e ->
+                                    Log.e(TAG, "Error writing document", e)
+                                }
                         } else {
                             //This is a returning user
                             Toast.makeText(view.context, "Welcome Back!", Toast.LENGTH_SHORT).show()
@@ -207,6 +219,31 @@ class HomeFragment : Fragment() {
         }
     }*/
 
+    override fun onStart() {
+        super.onStart()
+        val db = FirebaseFirestore.getInstance()
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            db.collection("favorites").document(user!!.uid).addSnapshotListener { snapshot, e ->
+                if (e != null) {
+                    Log.e(TAG, "Error fetching favorite events", e)
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null && snapshot.exists()) {
+                    favoriteEvents =
+                        snapshot.get("favoriteEvents") as? ArrayList<String> ?: arrayListOf()
+                    adapter.favoriteEvents = favoriteEvents
+                    adapter.notifyDataSetChanged()
+                    Log.d(TAG, "Fetched favorite events")
+                } else {
+                    Log.d(TAG, "Favorite events document not found")
+                }
+            }
+        }
+    }
+
+
     private fun getData(keyword: String, city: String, venueId: String? = null) {
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -239,6 +276,7 @@ class HomeFragment : Fragment() {
 
                 events.clear()
                 events.addAll(body._embedded.events)
+
                 adapter.notifyDataSetChanged()
 
                 if (venueId == null) {
