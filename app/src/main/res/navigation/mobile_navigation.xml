@@ -13,9 +13,9 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.example.ticketfinderapp.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:name="com.example.ticketfinderapp.ui.favorited.FavoritedFragment"
+        android:label="@string/title_favorited"
+        tools:layout="@layout/fragment_favorited" />
 
     <fragment
         android:id="@+id/navigation_settings"
