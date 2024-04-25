@@ -104,11 +104,8 @@ class HomeFragment : Fragment() {
             }
         }
 
-        // Get instance of the FirebaseAuth
-        val currentUser = FirebaseAuth.getInstance().currentUser
-
         // If currentUser is not null, we have a user and go back to the MainActivity
-        if (currentUser != null) {
+        if (user != null) {
             loginButton.visibility = View.GONE
         } else {
             // create a new ActivityResultLauncher to launch the sign-in activity and handle the result
@@ -224,7 +221,7 @@ class HomeFragment : Fragment() {
         val db = FirebaseFirestore.getInstance()
         val user = FirebaseAuth.getInstance().currentUser
         if (user != null) {
-            db.collection("favorites").document(user!!.uid).addSnapshotListener { snapshot, e ->
+            db.collection("favorites").document(user.uid).addSnapshotListener { snapshot, e ->
                 if (e != null) {
                     Log.e(TAG, "Error fetching favorite events", e)
                     return@addSnapshotListener

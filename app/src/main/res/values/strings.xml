@@ -5,4 +5,10 @@
     <string name="title_settings">Settings</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title">Find Tickets Around You</string>
+    <string name="keyword_hint">Event Type or keyword to search</string>
+    <string name="city_hint">City</string>
+    <string name="search">Search</string>
+    <string name="no_results_were_found">No Results were found</string>
+    <string name="sign_in">Sign In</string>
 </resources>
