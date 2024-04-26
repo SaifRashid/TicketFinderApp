@@ -21,7 +21,6 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ticketfinderapp.Event
@@ -30,10 +29,8 @@ import com.example.ticketfinderapp.MyRecyclerAdapter
 import com.example.ticketfinderapp.R
 import com.example.ticketfinderapp.TicketMasterData
 import com.example.ticketfinderapp.TicketMasterService
-import com.example.ticketfinderapp.databinding.FragmentHomeBinding
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import retrofit2.Call
@@ -72,7 +69,7 @@ class HomeFragment : Fragment() {
         // Write your code
         // Get a Cloud Firestore instance
         val db = FirebaseFirestore.getInstance()
-        loginButton = view.findViewById(R.id.login_button)
+        loginButton = view.findViewById(R.id.button_login)
         val user = FirebaseAuth.getInstance().currentUser
         favoriteEvents = ArrayList()
 
@@ -159,7 +156,7 @@ class HomeFragment : Fragment() {
                 }
 
             // Login Button
-            view.findViewById<Button>(R.id.login_button).setOnClickListener {
+            view.findViewById<Button>(R.id.button_login).setOnClickListener {
                 // Choose authentication providers -- make sure enable them on your firebase account first
                 val providers = arrayListOf(
                     AuthUI.IdpConfig.EmailBuilder().build(),
@@ -228,8 +225,7 @@ class HomeFragment : Fragment() {
                 }
 
                 if (snapshot != null && snapshot.exists()) {
-                    favoriteEvents =
-                        snapshot.get("favoriteEvents") as? ArrayList<String> ?: arrayListOf()
+                    favoriteEvents = snapshot.get("favoriteEvents") as? ArrayList<String> ?: arrayListOf()
                     adapter.favoriteEvents = favoriteEvents
                     adapter.notifyDataSetChanged()
                     Log.d(TAG, "Fetched favorite events")

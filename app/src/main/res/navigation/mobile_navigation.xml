@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_favorited"
         android:name="com.example.ticketfinderapp.ui.favorited.FavoritedFragment"
         android:label="@string/title_favorited"
         tools:layout="@layout/fragment_favorited" />

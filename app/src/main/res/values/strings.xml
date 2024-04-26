@@ -11,4 +11,5 @@
     <string name="search">Search</string>
     <string name="no_results_were_found">No Results were found</string>
     <string name="sign_in">Sign In</string>
+    <string name="your_favorited_events">Your Favorited Events</string>
 </resources>

@@ -28,8 +28,6 @@ class MyRecyclerAdapter(private val events: ArrayList<Event>, private val db: Fi
         val range = itemView.findViewById<TextView>(R.id.textView_range)
         val button = itemView.findViewById<Button>(R.id.button_tickets)
         val favoriteImage = itemView.findViewById<ImageView>(R.id.image_favorite)
-        val TAG = "MyRecyclerAdapter"
-
 
         init {
             button.setOnClickListener {
