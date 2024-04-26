@@ -214,11 +214,14 @@ class FavoritedFragment : Fragment() {
         if (string == "Sign in") {
             noFavorites.text = "Sign in to save your favorite events!"
             noFavorites.visibility = View.VISIBLE
+            recyclerView.visibility = View.INVISIBLE
         } else if (string == "No Favorites") {
             noFavorites.text = "No Favorites to display.\nClick the star icon to save your favorite events!"
             noFavorites.visibility = View.VISIBLE
+            recyclerView.visibility = View.INVISIBLE
         } else if (string == "gone"){
             noFavorites.visibility = View.GONE
+            recyclerView.visibility = View.VISIBLE
         }
     }
 }
