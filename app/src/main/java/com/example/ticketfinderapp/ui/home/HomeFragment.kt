@@ -48,6 +48,8 @@ class HomeFragment : Fragment() {
     private lateinit var loginButton: Button
     private lateinit var favoriteEvents: ArrayList<String>
 
+    private lateinit var db: FirebaseFirestore
+
     private val events = ArrayList<Event>()
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MyRecyclerAdapter
@@ -68,7 +70,7 @@ class HomeFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         // Write your code
         // Get a Cloud Firestore instance
-        val db = FirebaseFirestore.getInstance()
+        db = FirebaseFirestore.getInstance()
         loginButton = view.findViewById(R.id.button_login)
         val user = FirebaseAuth.getInstance().currentUser
         favoriteEvents = ArrayList()
@@ -215,7 +217,6 @@ class HomeFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        val db = FirebaseFirestore.getInstance()
         val user = FirebaseAuth.getInstance().currentUser
         if (user != null) {
             db.collection("favorites").document(user.uid).addSnapshotListener { snapshot, e ->
@@ -235,7 +236,6 @@ class HomeFragment : Fragment() {
             }
         }
     }
-
 
     private fun getData(keyword: String, city: String, venueId: String? = null) {
         val retrofit = Retrofit.Builder()

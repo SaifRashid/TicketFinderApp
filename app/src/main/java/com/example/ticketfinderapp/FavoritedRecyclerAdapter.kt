@@ -15,11 +15,11 @@ import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-class MyRecyclerAdapter(private val events: ArrayList<Event>, private val db: FirebaseFirestore, var favoriteEvents: ArrayList<String>) : RecyclerView.Adapter<MyRecyclerAdapter.MyViewHolder>() {
+class FavoritedRecyclerAdapter(private val events: ArrayList<Event>, private val db: FirebaseFirestore, var favoriteEvents: ArrayList<String>) : RecyclerView.Adapter<FavoritedRecyclerAdapter.MyViewHolder>() {
     // Provide a reference to the views for each data item
 // Complex data items may need more than one view per item, and
 // you provide access to all the views for a data item in a view holder.
-    class MyViewHolder(itemView: View, private val events: ArrayList<Event>, private val db: FirebaseFirestore, var favoriteEvents: ArrayList<String>) : RecyclerView.ViewHolder(itemView) {
+    class MyViewHolder(itemView: View, private val events: ArrayList<Event>, private val db: FirebaseFirestore) : RecyclerView.ViewHolder(itemView) {
         val image = itemView.findViewById<ImageView>(R.id.imageView)
         val title = itemView.findViewById<TextView>(R.id.textView_title)
         val location = itemView.findViewById<TextView>(R.id.textView_location)
@@ -52,56 +52,47 @@ class MyRecyclerAdapter(private val events: ArrayList<Event>, private val db: Fi
 
                         // Update the user's favorite events
                         favoritesCollection.get().addOnSuccessListener { documentSnapshot ->
-                            favoriteEvents = documentSnapshot.get("favoriteEvents") as? ArrayList<String> ?: arrayListOf()
+                            val favoriteEvents = documentSnapshot.get("favoriteEvents") as? ArrayList<String> ?: arrayListOf()
 
-                            if (favoriteEvents.contains(eventId)) {
-                                // If the event is already favorited, remove it
-                                favoriteEvents.remove(eventId)
-                                favoriteImage.setImageResource(R.drawable.no_star)
-                                favoritesCollection.update("favoriteEvents", favoriteEvents)
-                                    .addOnSuccessListener {
+                            favoriteEvents.remove(eventId)
+                            events.removeAt(position)
 
-                                        Toast.makeText(itemView.context, "Event removed from favorites", Toast.LENGTH_SHORT).show()
-                                    }
-                                    .addOnFailureListener {
-                                        Toast.makeText(itemView.context, "Failed to update favorites", Toast.LENGTH_SHORT).show()
-                                    }
 
-                            } else {
-                                // If the event is not favorited, add it
-                                favoriteEvents.add(eventId)
-                                favoriteImage.setImageResource(R.drawable.star)
-                                favoritesCollection.update("favoriteEvents", favoriteEvents)
-                                    .addOnSuccessListener {
-
-                                        Toast.makeText(
-                                            itemView.context,
-                                            "Event added to favorites",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-                                    .addOnFailureListener {
-                                        Toast.makeText(itemView.context, "Failed to update favorites", Toast.LENGTH_SHORT).show()
-                                    }
-                            }
+                            // Update the "favoriteEvents" field in the user's document
+                            favoritesCollection.update("favoriteEvents", favoriteEvents)
+                                .addOnSuccessListener {
+                                    Toast.makeText(
+                                        itemView.context,
+                                        "Event removed from favorites",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                                .addOnFailureListener {
+                                    Toast.makeText(
+                                        itemView.context,
+                                        "Failed to update favorites",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                         }
                     } else {
                         // User is not signed in
                         Toast.makeText(
-                            itemView.context, "Please sign in to add events to favorites", Toast.LENGTH_SHORT).show()
+                            itemView.context,
+                            "Please sign in to add events to favorites",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }
         }
     }
 
-    // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.row_item, parent, false)
-        return MyViewHolder(view, events, db, favoriteEvents)
+        return MyViewHolder(view, events, db)
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val highestQualityImage = events[position].images.maxByOrNull {
             it.width.toInt() * it.height.toInt()
@@ -153,14 +144,10 @@ class MyRecyclerAdapter(private val events: ArrayList<Event>, private val db: Fi
             holder.range.visibility = View.INVISIBLE
         }
 
-        if (favoriteEvents.contains(events[position].id)) {
-            holder.favoriteImage.setImageResource(R.drawable.star)
-        } else {
-            holder.favoriteImage.setImageResource(R.drawable.no_star)
-        }
+        holder.favoriteImage.setImageResource(R.drawable.star)
+
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount(): Int {
         return events.size
     }

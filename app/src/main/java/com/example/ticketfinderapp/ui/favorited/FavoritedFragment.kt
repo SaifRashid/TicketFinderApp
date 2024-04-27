@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ticketfinderapp.Event
+import com.example.ticketfinderapp.FavoritedRecyclerAdapter
 import com.example.ticketfinderapp.MainActivity
 import com.example.ticketfinderapp.MyRecyclerAdapter
 import com.example.ticketfinderapp.R
@@ -42,7 +43,7 @@ class FavoritedFragment : Fragment() {
 
     private val events = ArrayList<Event>()
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: MyRecyclerAdapter
+    private lateinit var adapter: FavoritedRecyclerAdapter
 
     private lateinit var noFavorites: TextView
 
@@ -62,7 +63,7 @@ class FavoritedFragment : Fragment() {
         favoriteEvents = ArrayList()
 
         recyclerView = view.findViewById(R.id.RecyclerView)
-        adapter = MyRecyclerAdapter(events, db, favoriteEvents)
+        adapter = FavoritedRecyclerAdapter(events, db, favoriteEvents)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(view.context)
 
@@ -71,6 +72,50 @@ class FavoritedFragment : Fragment() {
         // If currentUser is not null, we have a user and go back to the MainActivity
         if (user != null) {
             loginButton.visibility = View.GONE
+            db.collection("favorites").document(user.uid).get().addOnSuccessListener { documentSnapshot ->
+                favoriteEvents = documentSnapshot.get("favoriteEvents") as? ArrayList<String> ?: arrayListOf()
+                adapter.favoriteEvents = favoriteEvents
+                adapter.notifyDataSetChanged()
+                Log.d(TAG, "Fetched favorite events")
+                if (favoriteEvents.isNotEmpty()) {
+                    val retrofit = Retrofit.Builder()
+                        .baseUrl(BASE_URL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build()
+
+                    val ticketMasterAPI = retrofit.create(TicketMasterService::class.java)
+                    val call: Call<TicketMasterData> =
+                        ticketMasterAPI.getFavorites(apikey, sort, favoriteEvents)
+
+                    call.enqueue(object : Callback<TicketMasterData> {
+                        override fun onResponse(
+                            call: Call<TicketMasterData>,
+                            response: Response<TicketMasterData>
+                        ) {
+                            Log.d(TAG, "OnResponse: $response")
+                            val body = response.body()
+                            if (body == null) {
+                                Log.d(TAG, "Valid response was not received")
+                                return
+                            }
+
+                            // Check and return if no events
+                            if (body._embedded == null || body._embedded.events.isEmpty()) {
+                                return
+                            }
+
+                            events.clear()
+                            events.addAll(body._embedded.events)
+
+                            adapter.notifyDataSetChanged()
+                        }
+
+                        override fun onFailure(call: Call<TicketMasterData>, t: Throwable) {
+                            Log.d(TAG, "OnFailure: $t")
+                        }
+                    })
+                }
+            }
         } else {
             // create a new ActivityResultLauncher to launch the sign-in activity and handle the result
             // When the result is returned, the result parameter will contain the data and resultCode (e.g., OK, Cancelled etc.).
@@ -166,44 +211,6 @@ class FavoritedFragment : Fragment() {
                     Log.d(TAG, "Favorite events document not found")
                 }
                 updateNoFavorites(if (favoriteEvents.isEmpty()) "No Favorites" else "gone")
-                if (favoriteEvents.isNotEmpty()) {
-                    val retrofit = Retrofit.Builder()
-                        .baseUrl(BASE_URL)
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build()
-
-                    val ticketMasterAPI = retrofit.create(TicketMasterService::class.java)
-                    val call: Call<TicketMasterData> =
-                        ticketMasterAPI.getFavorites(apikey, sort, favoriteEvents)
-
-                    call.enqueue(object : Callback<TicketMasterData> {
-                        override fun onResponse(
-                            call: Call<TicketMasterData>,
-                            response: Response<TicketMasterData>
-                        ) {
-                            Log.d(TAG, "OnResponse: $response")
-                            val body = response.body()
-                            if (body == null) {
-                                Log.d(TAG, "Valid response was not received")
-                                return
-                            }
-
-                            // Check and return if no events
-                            if (body._embedded == null || body._embedded.events.isEmpty()) {
-                                return
-                            }
-
-                            events.clear()
-                            events.addAll(body._embedded.events)
-
-                            adapter.notifyDataSetChanged()
-                        }
-
-                        override fun onFailure(call: Call<TicketMasterData>, t: Throwable) {
-                            Log.d(TAG, "OnFailure: $t")
-                        }
-                    })
-                }
             }
         } else {
             updateNoFavorites("Sign in")
