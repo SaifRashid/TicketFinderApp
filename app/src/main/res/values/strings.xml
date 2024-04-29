@@ -3,8 +3,6 @@
     <string name="title_home">Home</string>
     <string name="title_favorited">Favorited</string>
     <string name="title_settings">Settings</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title">Find Tickets Around You</string>
     <string name="keyword_hint">Event Type or keyword to search</string>
     <string name="city_hint">City</string>
@@ -12,4 +10,7 @@
     <string name="no_results_were_found">No Results were found</string>
     <string name="sign_in">Sign In</string>
     <string name="your_favorited_events">Your Favorited Events</string>
+    <string name="sign_in_to_save_your_favorite_events">Sign in to save your favorite events!</string>
+    <string name="no_favorites_to_display_click_the_star_icon_to_save_your_favorite_events">No Favorites to display.\nClick the star icon to save your favorite events!</string>
+
 </resources>

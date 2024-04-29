@@ -27,17 +27,16 @@ open class BaseFragment : Fragment() {
                 registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                     if (result.resultCode == Activity.RESULT_OK) {
                         // The user has successfully signed in or he/she is a new user
+                        val loggedInUser = FirebaseAuth.getInstance().currentUser
+                        Log.d(TAG, "onActivityResult: $loggedInUser")
 
-                        val user = FirebaseAuth.getInstance().currentUser
-                        Log.d(TAG, "onActivityResult: $user")
-
-                        //Checking for User (New/Old) (optional--you do not have to show these toast messages)
-                        if (user?.metadata?.creationTimestamp == user?.metadata?.lastSignInTimestamp) {
+                        //Checking for User (New/Old)
+                        if (loggedInUser?.metadata?.creationTimestamp == loggedInUser?.metadata?.lastSignInTimestamp) {
                             //This is a New User
                             val docData = hashMapOf(
                                 "favoriteEvents" to arrayListOf<String>()
                             )
-                            db.collection("favorites").document(user!!.uid).set(docData)
+                            db.collection("favorites").document(loggedInUser!!.uid).set(docData)
                                 .addOnSuccessListener {
                                     Log.d(TAG, "DocumentSnapshot successfully written!")
                                     Toast.makeText(requireView().context, "Welcome New User!", Toast.LENGTH_SHORT).show()

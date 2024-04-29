@@ -138,17 +138,21 @@ class FavoritedFragment : BaseFragment() {
     }
 
     private fun updateNoFavorites(string: String) {
-        if (string == "Sign in") {
-            noFavorites.text = "Sign in to save your favorite events!"
-            noFavorites.visibility = View.VISIBLE
-            recyclerView.visibility = View.INVISIBLE
-        } else if (string == "No Favorites") {
-            noFavorites.text = "No Favorites to display.\nClick the star icon to save your favorite events!"
-            noFavorites.visibility = View.VISIBLE
-            recyclerView.visibility = View.INVISIBLE
-        } else if (string == "gone"){
-            noFavorites.visibility = View.GONE
-            recyclerView.visibility = View.VISIBLE
+        when (string) {
+            "Sign in" -> {
+                noFavorites.text = getString(R.string.sign_in_to_save_your_favorite_events)
+                noFavorites.visibility = View.VISIBLE
+                recyclerView.visibility = View.INVISIBLE
+            }
+            "No Favorites" -> {
+                noFavorites.text = getString(R.string.no_favorites_to_display_click_the_star_icon_to_save_your_favorite_events)
+                noFavorites.visibility = View.VISIBLE
+                recyclerView.visibility = View.INVISIBLE
+            }
+            "gone" -> {
+                noFavorites.visibility = View.GONE
+                recyclerView.visibility = View.VISIBLE
+            }
         }
     }
 }
