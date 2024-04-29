@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-class MyRecyclerAdapter(private val events: ArrayList<Event>, private val db: FirebaseFirestore, var favoriteEvents: ArrayList<String>) : RecyclerView.Adapter<MyRecyclerAdapter.MyViewHolder>() {
+class MyRecyclerAdapter(val events: ArrayList<Event>, private val db: FirebaseFirestore, var favoriteEvents: ArrayList<String>) : RecyclerView.Adapter<MyRecyclerAdapter.MyViewHolder>() {
     // Provide a reference to the views for each data item
 // Complex data items may need more than one view per item, and
 // you provide access to all the views for a data item in a view holder.
