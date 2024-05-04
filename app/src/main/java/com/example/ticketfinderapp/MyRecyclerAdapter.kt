@@ -64,6 +64,7 @@ class MyRecyclerAdapter(val events: ArrayList<Event>, private val db: FirebaseFi
                                         Toast.makeText(itemView.context, "Event removed from favorites", Toast.LENGTH_SHORT).show()
                                     }
                                     .addOnFailureListener {
+                                        favoriteImage.setImageResource(R.drawable.star)
                                         Toast.makeText(itemView.context, "Failed to update favorites", Toast.LENGTH_SHORT).show()
                                     }
 
@@ -81,6 +82,7 @@ class MyRecyclerAdapter(val events: ArrayList<Event>, private val db: FirebaseFi
                                         ).show()
                                     }
                                     .addOnFailureListener {
+                                        favoriteImage.setImageResource(R.drawable.no_star)
                                         Toast.makeText(itemView.context, "Failed to update favorites", Toast.LENGTH_SHORT).show()
                                     }
                             }

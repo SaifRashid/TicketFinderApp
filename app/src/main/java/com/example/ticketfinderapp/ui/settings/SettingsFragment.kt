@@ -8,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.ListView
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.example.ticketfinderapp.BaseFragment
 import com.example.ticketfinderapp.MainActivity
@@ -49,6 +51,13 @@ class SettingsFragment : BaseFragment() {
         favoriteEvents = ArrayList()
 
         login(user, loginButton, db, TAG)
+
+        if (user != null) {
+            view.findViewById<TextView>(R.id.text_name).text = user.displayName
+        } else {
+            view.findViewById<TextView>(R.id.text_name).visibility = View.GONE
+            view.findViewById<ImageView>(R.id.image_profile).visibility = View.GONE
+        }
 
         settingsListView.setOnItemClickListener { _, _, position, _ ->
             if (position == 0) {
