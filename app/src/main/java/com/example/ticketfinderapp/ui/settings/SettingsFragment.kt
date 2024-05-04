@@ -94,14 +94,16 @@ class SettingsFragment : BaseFragment() {
                     builder.setIcon(R.drawable.baseline_delete_forever_24)
                     // Set the button actions (i.e. listeners), optional
                     builder.setPositiveButton("YES") { _, _ ->
-                        db.collection("favorites").document(user.uid).delete()
                         AuthUI.getInstance().delete(view.context)
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
+                                    showToast("Account successfully deleted")
+                                    db.collection("favorites").document(user.uid).delete()
                                     // After Delete, start the MainActivity again
                                     startActivity(Intent(view.context, MainActivity::class.java))
                                     requireActivity().finish()
                                 } else {
+                                    showToast("Failed to delete, Relog and try again.")
                                     Log.e(TAG, "Task is not successful:${task.exception}")
                                 }
                             }
