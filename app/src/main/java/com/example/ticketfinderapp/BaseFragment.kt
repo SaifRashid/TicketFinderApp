@@ -30,29 +30,36 @@ open class BaseFragment : Fragment() {
                         val loggedInUser = FirebaseAuth.getInstance().currentUser
                         Log.d(TAG, "onActivityResult: $loggedInUser")
 
-                        //Checking for User (New/Old)
-                        if (loggedInUser?.metadata?.creationTimestamp == loggedInUser?.metadata?.lastSignInTimestamp) {
-                            //This is a New User
-                            val docData = hashMapOf(
-                                "favoriteEvents" to arrayListOf<String>()
-                            )
-                            db.collection("favorites").document(loggedInUser!!.uid).set(docData)
-                                .addOnSuccessListener {
-                                    Log.d(TAG, "DocumentSnapshot successfully written!")
-                                    Toast.makeText(requireView().context, "Welcome New User!", Toast.LENGTH_SHORT).show()
+                        // Checking if the user is new by checking the existence of a document with the user's UID in Firestore
+                        val userRef = db.collection("favorites").document(loggedInUser!!.uid)
+                        userRef.get()
+                            .addOnSuccessListener { document ->
+                                if (document.exists()) {
+                                    // This is a returning user
+                                    Toast.makeText(requireView().context, "Welcome Back!", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    // This is a new user
+                                    val docData = hashMapOf(
+                                        "favoriteEvents" to arrayListOf<String>()
+                                    )
+                                    userRef.set(docData)
+                                        .addOnSuccessListener {
+                                            Log.d(TAG, "DocumentSnapshot successfully written!")
+                                            Toast.makeText(requireView().context, "Welcome New User!", Toast.LENGTH_SHORT).show()
+                                        }
+                                        .addOnFailureListener { e ->
+                                            Log.e(TAG, "Error writing document", e)
+                                        }
                                 }
-                                .addOnFailureListener { e ->
-                                    Log.e(TAG, "Error writing document", e)
-                                }
-                        } else {
-                            //This is a returning user
-                            Toast.makeText(requireView().context, "Welcome Back!", Toast.LENGTH_SHORT).show()
-                        }
 
-                        // Since the user signed in, the user can go back to main activity
-                        startActivity(Intent(requireView().context, MainActivity::class.java))
-                        // Make sure to call finish(), otherwise the user would be able to go back to the RegisterActivity
-                        requireActivity().finish()
+                                // Since the user signed in, the user can go back to main activity
+                                startActivity(Intent(requireView().context, MainActivity::class.java))
+                                // Make sure to call finish(), otherwise the user would be able to go back to the RegisterActivity
+                                requireActivity().finish()
+                            }
+                            .addOnFailureListener { e ->
+                                Log.e(TAG, "Error checking document existence", e)
+                            }
 
                     } else {
                         // Sign in failed. If response is null the user canceled the
