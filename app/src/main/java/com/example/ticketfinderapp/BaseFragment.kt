@@ -90,7 +90,7 @@ open class BaseFragment : Fragment() {
                     .createSignInIntentBuilder()
                     .setAvailableProviders(providers)
                     .setTosAndPrivacyPolicyUrls("https://example.com", "https://example.com")
-                    .setLogo(R.drawable.baseline_music_video_24)
+                    .setLogo(R.drawable.ticket_sign_in)
                     .setIsSmartLockEnabled(false)
                     .build()
 
