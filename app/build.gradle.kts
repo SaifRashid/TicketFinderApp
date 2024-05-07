@@ -65,7 +65,7 @@ dependencies {
     // Import Firestore
     implementation("com.google.firebase:firebase-firestore:24.11.0")
     // Authentication
-    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-auth:21.0.0")
     // FirebaseUI for Firebase Auth
     implementation("com.firebaseui:firebase-ui-auth:8.0.2")
 }
