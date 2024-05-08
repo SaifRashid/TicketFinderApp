@@ -39,11 +39,7 @@ class SettingsFragment : BaseFragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_settings, container, false)
         // Write your code
-        list = listOf("Sign Out", "Remove All Favorited Events", "Delete Account")
-
-        settingsAdapter = ArrayAdapter(view.context, android.R.layout.simple_list_item_1, list)
         settingsListView = view.findViewById(R.id.listView_settings)
-        settingsListView.adapter = settingsAdapter
 
         db = FirebaseFirestore.getInstance()
         loginButton = view.findViewById(R.id.login_button2)
